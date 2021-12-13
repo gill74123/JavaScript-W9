@@ -227,6 +227,12 @@ body {
   margin-bottom: 30px;
 }
 
+/* NEW START*/
+.chartArea{
+  text-align: center;
+}
+/* NEW END*/
+
 .bedAdvantage {
   display: -webkit-box;
   display: -ms-flexbox;
