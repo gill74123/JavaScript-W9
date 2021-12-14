@@ -228,6 +228,19 @@ body {
 }
 
 /* NEW START*/
+.orderPage-pie{
+  padding: 0px 10px;
+}
+
+.c3PieSelect{
+  border: 1px solid #B9B9B9;
+  min-height: 38px;
+  min-width: 200px;
+  border-radius: 5px;
+  text-indent: 10px;
+  margin-bottom: 30px;
+}
+
 .chartArea{
   text-align: center;
 }

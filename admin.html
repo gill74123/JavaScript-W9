@@ -33,8 +33,13 @@
     </nav>
 
     <!-- 圖表 -->
-    <section class="wrap">
-        <h2 class="section-title">全品項營收比重</h2>
+    <section class="wrap orderPage-pie">
+        <select name="" class="c3PieSelect">
+            <option value="c3AllItemsFilter" selected>全品項營收比重(篩選)</option>
+            <option value="c3AllItems">全品項營收比重</option>
+            <option value="c3AllItemsCategory">全品項類別營收比重</option>
+        </select>
+        <h2 class="section-title c3PieTitle"></h2>
         <div id="chart" class="chartArea"></div>
     </section>
 

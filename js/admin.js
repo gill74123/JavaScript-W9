@@ -11,6 +11,8 @@ const config = {
 // DOM 指向
 const orderPageTbody = document.querySelector("tbody");
 const discardAllBtn = document.querySelector(".discardAllBtn");
+const c3PieSelect = document.querySelector(".c3PieSelect");
+const c3PieTitle = document.querySelector(".c3PieTitle");
 const chartArea = document.querySelector(".chartArea");
 
 
@@ -32,13 +34,13 @@ function getOrderList() {
             // 執行 渲染訂單列表
             renderOrderList(orderData);
 
-            // 執行 圖表(前三名+其他)
+            // 執行 圖表
             if(orderData.length === 0){
                 chartArea.textContent = "目前沒有訂單！"
             } else{
-                c3AllItemsFilter();
-            }
-            
+                // 執行 渲染 C3 圖表
+                renderC3Chart();
+            }            
         })
         .catch((error) => {
             console.log(error);
@@ -48,9 +50,14 @@ function getOrderList() {
 
 // 渲染 訂單列表
 function renderOrderList(orderData) {
+    // 將資料排序(後到先)
+    orderDataSort = orderData.sort((a, b) => {
+        return (b.createdAt * 1000) - (a.createdAt * 1000)
+    })
+    // console.log(orderDataSort);
+
     let str = "";
-    orderData.forEach((item) => {
-        // console.log(item);
+    orderDataSort.forEach((item) => {
         // 日期轉換
         let date = new Date(item.createdAt * 1000).toLocaleDateString();
 
@@ -193,7 +200,25 @@ function editOrderStatusClick() {
     })
 }
 
-// 圖表資料彙整 (全品項營收比重)
+// 圖表 change 事件
+c3PieSelect.addEventListener("change", renderC3Chart);
+
+// 渲染 C3 圖表
+function renderC3Chart(){
+    // console.log(c3PieSelect.value);
+    if (c3PieSelect.value === "c3AllItemsFilter") {
+        c3PieTitle.textContent = "全品項營收比重(篩選)";
+        c3AllItemsFilter();
+    } else if (c3PieSelect.value === "c3AllItems") {
+        c3PieTitle.textContent = "全品項營收比重";
+        c3AllItems();
+    } else if (c3PieSelect.value === "c3AllItemsCategory") {
+        c3PieTitle.textContent = "全品項類別營收比重";
+        c3AllItemsCategory();
+    }
+}
+
+// 圖表 (全品項營收比重篩選)
 function c3AllItemsFilter() {
     // output {title: total, title: total....}
     let productsObj = {};
@@ -227,33 +252,113 @@ function c3AllItemsFilter() {
     // console.log(c3DataSort);
 
     // 組出最終 Data
-    let finalData = [];
+    let finalc3Data = [];
     let otherData = ["其他", 0]
     c3DataSort.forEach((item, index, arr) => {
         if (index < 3) {
-            finalData.push(item);
+            finalc3Data.push(item);
         } else {
             otherData[1] += item[1];
 
-            // 到最後一筆將 otherData 加到 finalData 裡
+            // 到最後一筆將 otherData 加到 finalc3Data 裡
             if (index === arr.length - 1) {
-                finalData.push(otherData);
+                finalc3Data.push(otherData);
             }
         }
     })
-    // console.log(finalData);
+    // console.log(finalc3Data);
 
     // C3.js
     let chart = c3.generate({
         bindto: '#chart',
         data: {
             type: "pie",
-            columns: finalData,
+            columns: finalc3Data,
         },
         color: {
             pattern: ["#484891", "#7373B9", "#9393FF", "#B9B9FF"]
         }
-    });    
+    });
+}
+
+// 圖表(全品項營收比重)
+function c3AllItems() {
+    // output {title: total, title: total....}
+    let productsObj = {};
+    orderData.forEach((item) => {
+        item.products.forEach((i) => {
+            if (productsObj[i.title]) {
+                productsObj[i.title] += (i.quantity) * (i.price);
+            } else {
+                productsObj[i.title] = (i.quantity) * (i.price);
+            }
+        })
+    })
+    // console.log(productsObj);
+
+    // output [[title, total], [title, total]....]
+    let productsTitle = Object.keys(productsObj);
+    let finalc3Data = [];
+    productsTitle.forEach((item) => {
+        let ary = [];
+        ary.push(item);
+        ary.push(productsObj[item]);
+        finalc3Data.push(ary)
+    })
+    // console.log(finalc3Data);
+
+    // C3.js
+    let chart = c3.generate({
+        bindto: '#chart',
+        data: {
+            type: "pie",
+            columns: finalc3Data,
+        },
+        color: {
+            pattern: ["#336666", "#3D7878", "#408080", "#4F9D9D", "#5CADAD", "#6FB7B7", "#81C0C0", "#95CACA"]
+        }
+    });
+
+}
+
+// 圖表(全品項種類營收比重)
+function c3AllItemsCategory() {
+    // 篩選出有哪些類別
+    // output {title: total, title: total....}
+    let categoryObj = {};
+    orderData.forEach((item) => {
+        item.products.forEach((i) => {
+            if (categoryObj[i.category]) {
+                categoryObj[i.category] += (i.quantity) * (i.price);
+            } else{
+                categoryObj[i.category] = (i.quantity) * (i.price)
+            }
+        })
+    })
+    // console.log(categoryObj);
+
+    // output [[title, total], [title, total]....]
+    let itemsCategory = Object.keys(categoryObj);    
+    let finalc3Data = []
+    itemsCategory.forEach((item) => {
+        let ary = [];
+        ary.push(item);
+        ary.push(categoryObj[item])
+        finalc3Data.push(ary)
+    })
+    // console.log(finalc3Data);
+    
+    // C3.js
+    let chart = c3.generate({
+        bindto: '#chart',
+        data: {
+            type: "pie",
+            columns: finalc3Data,
+        },
+        color: {
+            pattern: ["#820041", "#BF0060", "#F00078"]
+        }
+    });
 }
 
 
