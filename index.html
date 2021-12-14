@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>WOWOROOM 簡易電商網站</title>
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
@@ -20,7 +20,7 @@
 
 <body>
     <nav class="topBar">
-        <div class="wrap">
+        <div class="wrap">  
             <h1><a href="#" class="logo">WOWOROOM</a></h1>
             <span class="material-icons menuToggle">
                 menu
@@ -287,15 +287,20 @@
             </li>
         </ul>
     </section>
+
+    <!-- 產品列表 -->
     <section class="wrap productDisplay">
+        <h3 class="section-title">產品列表</h3>
+        <!-- 篩選欄位 -->
         <select name="" class="productSelect">
             <option value="全部" selected>全部</option>
             <option value="床架">床架</option>
             <option value="收納">收納</option>
             <option value="窗簾">窗簾</option>
         </select>
-        <ul class="productWrap">
-            <li class="productCard">
+        <!-- 商品 -->
+        <ul class="productWrap productList">
+            <!-- <li class="productCard">
                 <h4 class="productType">新品</h4>
                 <img src="https://hexschool-api.s3.us-west-2.amazonaws.com/custom/dp6gW6u5hkUxxCuNi8RjbfgufygamNzdVHWb15lHZTxqZQs0gdDunQBS7F6M3MdegcQmKfLLoxHGgV3kYunUF37DNn6coPH6NqzZwRfhbsmEblpJQLqXLg4yCqUwP3IE.png"
                     alt="">
@@ -303,6 +308,8 @@
                 <h3>Antony 雙人床架／雙人加大</h3>
                 <del class="originPrice">NT$18,000</del>
                 <p class="nowPrice">NT$12,000</p>
+                <label for="num" class="productsLabel">數量：</label>
+                <input type="number" id="num" class="productsNum" placeholder="請填寫數量" min="1">
             </li>
             <li class="productCard">
                 <h4 class="productType">新品</h4>
@@ -366,9 +373,11 @@
                 <h3>Antony 雙人床架／雙人加大</h3>
                 <del class="originPrice">NT$18,000</del>
                 <p class="nowPrice">NT$12,000</p>
-            </li>
+            </li> -->
         </ul>
     </section>
+
+    <!-- 我的購物車 -->
     <section class="shoppingCart">
         <h3 class="section-title">我的購物車</h3>
         <div class="overflowWrap">
@@ -380,7 +389,8 @@
                     <th width="15%">金額</th>
                     <th width="15%"></th>
                 </tr>
-                <tr>
+                <tbody class="shoppingCart-body">
+                    <!-- <tr>
                     <td>
                         <div class="cardItem-title">
                             <img src="https://i.imgur.com/HvT3zlU.png" alt="">
@@ -395,7 +405,8 @@
                             clear
                         </a>
                     </td>
-                </tr>
+                </tr> -->
+                </tbody>
                 <tr>
                     <td>
                         <a href="#" class="discardAllBtn">刪除所有品項</a>
@@ -405,11 +416,13 @@
                     <td>
                         <p>總金額</p>
                     </td>
-                    <td>NT$13,980</td>
+                    <td class="shoppingCart-totalPrice">NT$0</td>
                 </tr>
             </table>
         </div>
     </section>
+    
+    <!-- 填寫預定資料 -->
     <section class="orderInfo wrap" id="orderInfo">
         <h3 class="section-title">填寫預訂資料</h3>
         <form action="" class="orderInfo-form">
