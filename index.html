@@ -292,12 +292,20 @@
     <section class="wrap productDisplay">
         <h3 class="section-title">產品列表</h3>
         <!-- 篩選欄位 -->
-        <select name="" class="productSelect">
-            <option value="全部" selected>全部</option>
-            <option value="床架">床架</option>
-            <option value="收納">收納</option>
-            <option value="窗簾">窗簾</option>
-        </select>
+        <div class="lookForArea">
+            <select name="" class="productSelect">
+                <!-- <option value="全部" selected>全部</option>
+                <option value="床架">床架</option>
+                <option value="收納">收納</option>
+                <option value="窗簾">窗簾</option> -->
+            </select>
+            <div class="searchArea">
+                <input type="text" class="searchBox">
+                <input type="button" class="searchBtn" value="Search">
+            </div>
+        </div>
+        
+        
         <!-- 商品 -->
         <ul class="productWrap productList">
             <!-- <li class="productCard">
@@ -385,9 +393,9 @@
                 <tr>
                     <th width="40%">品項</th>
                     <th width="15%">單價</th>
-                    <th width="15%">數量</th>
+                    <th width="17%">數量</th>
                     <th width="15%">金額</th>
-                    <th width="15%"></th>
+                    <th width="13%"></th>
                 </tr>
                 <tbody class="shoppingCart-body">
                     <!-- <tr>
@@ -416,7 +424,7 @@
                     <td>
                         <p>總金額</p>
                     </td>
-                    <td class="shoppingCart-totalPrice">NT$0</td>
+                    <td class="shoppingCart-totalPrice"></td>
                 </tr>
             </table>
         </div>
@@ -427,44 +435,46 @@
         <h3 class="section-title">填寫預訂資料</h3>
         <form action="" class="orderInfo-form">
             <div class="orderInfo-formGroup">
-                <label for="customerName" class="orderInfo-label">姓名</label>
+                <label for="customerName" class="orderInfo-label"><span>* </span>姓名</label>
                 <div class="orderInfo-inputWrap">
                     <input type="text" class="orderInfo-input" id="customerName" placeholder="請輸入姓名" name="姓名">
-                    <p class="orderInfo-message" data-message="姓名">必填</p>
+                    <p class="orderInfo-message" data-message="姓名"></p>
                 </div>
             </div>
             <div class="orderInfo-formGroup">
-                <label for="customerPhone" class="orderInfo-label">電話</label>
+                <label for="customerPhone" class="orderInfo-label"><span>* </span>電話</label>
                 <div class="orderInfo-inputWrap">
                     <input type="tel" class="orderInfo-input" id="customerPhone" placeholder="請輸入電話" name="電話">
-                    <p class="orderInfo-message" data-message="電話">必填</p>
+                    <p class="orderInfo-message" data-message="電話"></p>
                 </div>
             </div>
             <div class="orderInfo-formGroup">
-                <label for="customerEmail" class="orderInfo-label">Email</label>
+                <label for="customerEmail" class="orderInfo-label"><span>* </span>Email</label>
                 <div class="orderInfo-inputWrap">
                     <input type="email" class="orderInfo-input" id="customerEmail" placeholder="請輸入 Email" name="Email">
-                    <p class="orderInfo-message" data-message="Email">必填</p>
+                    <p class="orderInfo-message" data-message="Email"></p>
                 </div>
             </div>
             <div class="orderInfo-formGroup">
-                <label for="customerAddress" class="orderInfo-label">寄送地址</label>
+                <label for="customerAddress" class="orderInfo-label"><span>* </span>寄送地址</label>
                 <div class="orderInfo-inputWrap">
                     <input type="text" class="orderInfo-input" id="customerAddress" placeholder="請輸入寄送地址" name="寄送地址">
-                    <p class="orderInfo-message" data-message="寄送地址">必填</p>
+                    <p class="orderInfo-message" data-message="寄送地址"></p>
                 </div>
             </div>
             <div class="orderInfo-formGroup">
-                <label for="tradeWay" class="orderInfo-label">交易方式</label>
+                <label for="tradeWay" class="orderInfo-label"><span>* </span>交易方式</label>
                 <div class="orderInfo-inputWrap">
                     <select id="tradeWay" class="orderInfo-input" name="交易方式">
-                        <option value="ATM" selected>ATM</option>
+                        <option value="" selected hidden>請選擇交易方式</option>
+                        <option value="ATM">ATM</option>
                         <option value="信用卡">信用卡</option>
                         <option value="超商付款">超商付款</option>
                     </select>
+                    <p class="orderInfo-message" data-message="交易方式"></p>
                 </div>
             </div>
-            <input type="submit" value="送出預訂資料" class="orderInfo-btn">
+            <input type="button" value="送出預訂資料" class="orderInfo-btn">
         </form>
     </section>
 
@@ -475,6 +485,9 @@
     <!-- axios -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
+    <!-- validate.js -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/validate.js/0.13.1/validate.min.js"></script>
+   
     <!-- 預設 JS，請同學不要修改此處 -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {

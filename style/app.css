@@ -523,8 +523,40 @@ body {
   min-width: 255px;
   border-radius: 5px;
   text-indent: 10px;
+}
+
+/* NEW START */
+.lookForArea{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
   margin-bottom: 30px;
 }
+
+.lookForArea input{
+  border: 1px solid #B9B9B9;
+  min-height: 38px;
+  border-radius: 5px;
+}
+
+.searchBox{
+  min-width: 255px;
+  text-indent: 10px;
+}
+
+.searchBtn{
+  background-color: #fff;
+  color: #301E5F;
+  cursor: pointer;
+}
+
+.searchBtn:hover{
+  background-color: #301E5F;
+  color: #fff;
+}
+
+/* NEW END */
 
 .productWrap {
   display: -webkit-box;
@@ -571,12 +603,43 @@ body {
   .productCard {
     width: 48%;
   }
+
+  .productSelect{
+    min-width: 30%;
+  }
+
+  /* NEW START */
+  .searchBox{
+    margin-right: 0px;
+    min-width: 70%;
+  }
+  /* NEW END */
 }
 
 @media (max-width: 540px) {
   .productCard {
     width: 100%;
   }
+
+  /* NEW START */
+  .productSelect{
+    min-width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .searchArea{
+    width: 100%;
+  }
+
+  .searchBox{
+    margin-right: 0px;
+    width: 82%;
+  }
+
+  .searchBtn{
+    width: 17%;
+  }
+  /* NEW END */
 }
 
 .productType {
@@ -639,6 +702,11 @@ body {
 /* NEW START */
 .shoppingCart-body{
   border-bottom: 1px solid #B9B9B9;
+}
+
+.shoppingCart-body .noCart{
+  padding: 20px;
+  text-align: center;
 }
 
 .amountArea{
@@ -740,6 +808,12 @@ body {
   display: block;
   margin-bottom: 6px;
 }
+
+/* NEW START */
+.orderInfo-label span{
+  color: #C44021;
+}
+/* NEW END */
 
 .orderInfo-input {
   width: 100%;

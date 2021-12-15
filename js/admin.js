@@ -14,7 +14,7 @@ const discardAllBtn = document.querySelector(".discardAllBtn");
 const c3PieSelect = document.querySelector(".c3PieSelect");
 const c3PieTitle = document.querySelector(".c3PieTitle");
 const chartArea = document.querySelector(".chartArea");
-
+const orderPageInfo = document.querySelector(".orderPage-info")
 
 // 初始化
 function init() {
@@ -36,7 +36,7 @@ function getOrderList() {
 
             // 執行 圖表
             if(orderData.length === 0){
-                chartArea.textContent = "目前沒有訂單！"
+                orderPageInfo.textContent = "目前沒有訂單！"
             } else{
                 // 執行 渲染 C3 圖表
                 renderC3Chart();
@@ -52,7 +52,7 @@ function getOrderList() {
 function renderOrderList(orderData) {
     // 將資料排序(後到先)
     orderDataSort = orderData.sort((a, b) => {
-        return (b.createdAt * 1000) - (a.createdAt * 1000)
+        return b.createdAt - a.createdAt
     })
     // console.log(orderDataSort);
 
@@ -119,7 +119,9 @@ function deleteOrderAll() {
 
 // 清除全部訂單 click 事件
 discardAllBtn.addEventListener("click", discardAllBtnClick);
-function discardAllBtnClick() {
+function discardAllBtnClick(e) {
+    e.preventDefault();
+
     // 執行 清除全部訂單
     deleteOrderAll();
 }
