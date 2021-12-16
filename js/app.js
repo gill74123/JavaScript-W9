@@ -15,7 +15,9 @@ const CartsTotalPrice = document.querySelector(".shoppingCart-totalPrice");
 const discardAllBtn = document.querySelector(".discardAllBtn");
 const orderInfoBtn = document.querySelector(".orderInfo-btn");
 const orderInfoForm = document.querySelector(".orderInfo-form")
-const orderInputGroup = document.querySelectorAll("input[type=text], input[type=tel], input[type=email], select[id=tradeWay]");
+const orderInputGroup = document.querySelectorAll("input[type=text], input[type=tel], input[type=email], select[id='tradeWay']");
+const searchBtn = document.querySelector(".searchBtn");
+const searchInput = document.querySelector(".searchInput");
 
 
 // 初始化
@@ -80,7 +82,7 @@ function renderProductsList(productsData) {
 function getProductsCategory() {
     // output [床架, 收納, 窗簾]
     productsCategory = {};
-    productsData.forEach((item) => {        
+    productsData.forEach((item) => {
         if (!productsCategory[item.category]) {
             productsCategory[item.category] = 0;
         }
@@ -114,7 +116,25 @@ function productSelectChange(e) {
     renderProductsList(selectFilterData);
 }
 
+// 關鍵字搜尋 click 事件
+searchBtn.addEventListener("click", searchBtnClick);
+function searchBtnClick(e) {
+    let searchValue = searchInput.value.trim().toLowerCase();
+    let searchFilterData = productsData.filter((item) => {
+        // let searchValue = searchInput.value.trim().toLowerCase();
+        let productsTitle = item.title.trim().toLowerCase();
 
+        return productsTitle.match(searchValue);
+    })
+
+    if (searchFilterData.length === 0) {
+        // 執行 提示互動
+        searchBtnWarningAlert(searchValue);
+    } else{
+        // 執行 渲染產品列表
+        renderProductsList(searchFilterData);
+    }
+}
 
 // 取得 購物車列表
 let cartsData = [];
@@ -188,16 +208,19 @@ function addCarts(productid, quantity) {
         .then((response) => {
             // console.log(response);
             cartsData = response.data.carts;
-
+        
             // 防呆
-            if (!quantity) {
-                alert("要填寫數量哦~~~");
+           if (!quantity) {
+                // 執行 提示互動
+                addCartsWarningAlert();
                 return
             }
-
+            
             // 執行 渲染購物車列表
             renderCartsList(cartsData);
-            alert("成功加入購物車！！！");
+
+            // 執行 提示互動
+            addCartsSuccessAlert();
         })
         .catch((error) => {
             console.log(error);
@@ -246,11 +269,15 @@ function editCartsNum(cartid, editnum) {
 
             // 執行 渲染購物車列表
             renderCartsList(cartsData);
-            alert("已修改產品數量！")
+
+            // 執行 提示互動
+            editCartsNumSuccessAlert();
         })
         .catch((error) => {
             console.log(error);
-            alert(error.response.data.message);
+
+            // 執行 提示互動
+            editCartsNumWarningAlert()
         })
 }
 
@@ -278,11 +305,10 @@ function deleteCartsAll() {
 
             // 執行 渲染購物車列表
             renderCartsList(cartsData);
-            alert("商品已全部清空！");
         })
         .catch((error) => {
             console.log(error);
-            alert(error.response.data.message);
+            // alert(error.response.data.message);
         })
 }
 
@@ -291,8 +317,17 @@ discardAllBtn.addEventListener("click", discardAllBtnClick);
 function discardAllBtnClick(e) {
     e.preventDefault();
 
-    // 執行 清除購物車全部產品
-    deleteCartsAll();
+    if (cartsData === undefined) {
+        // 執行 提示互動
+        deleteCartsAllWarningAlert();
+    } else if (cartsData.length === 0) {
+        // 執行 提示互動
+        deleteCartsAllWarningAlert();
+    } 
+    else {
+        // 執行 提示互動
+        deleteCartsAllCheckAlert();
+    }
 }
 
 // 清除指定購物車產品
@@ -305,11 +340,10 @@ function deleteCartsItem(cartid) {
 
             // 執行 渲染購物車列表
             renderCartsList(cartsData);
-            alert("指定商品已清除！");
         })
         .catch((error) => {
             console.log(error);
-            alert(error.response.data.message);
+            // alert(error.response.data.message);
         })
 }
 
@@ -322,8 +356,8 @@ function deleteCartsItemClick() {
             e.preventDefault();
             let cartid = e.target.dataset.cartid;
 
-            // 執行 清除指定購物車產品
-            deleteCartsItem(cartid);
+            // 執行 提示互動
+            deleteCartsItemCheckAlert(cartid);
         })
     })
 }
@@ -338,21 +372,26 @@ function createOrder(userInfo) {
     axios.post(urlOrders, userData)
         .then((response) => {
             // console.log(response.data); // 這邊的 data 是訂單的 data
-            
+
             // 將購物車資料清空
             cartsData = [];
 
             // 執行 渲染購物車列表
             renderCartsList(cartsData);
-            alert("成功送出訂單！");
+
+            // 執行 提示互動
+            orderInfoSuccessAlert();
 
             // 清空表單
             orderInfoForm.reset();
         })
         .catch((error) => {
-            console.log(error);
+            console.log(error.data);
             if (error.response.data.status === false) {
-                alert(error.response.data.message);
+                // alert(error.response.data.message);
+
+                // 執行 提示互動
+                orderInfoWarningAlert();
             }
         })
 }
@@ -376,21 +415,19 @@ function orderInfoBtnClick() {
     })
     // 執行 送出訂單
     createOrder(userInfo);
-
-
 }
 
 // 送出訂單 change 事件
 orderInputGroup.forEach((item) => {
     item.addEventListener("change", (e) => {
         // 預設為空字串 324行 & 350 行都可以
-        document.querySelector(`[data-message=${item.name}]`).textContent = "";ㄋ
+        document.querySelector(`[data-message=${item.name}]`).textContent = "";
 
         let orderInfoError = validate(orderInfoForm, constraints);
 
         if (orderInfoError) {
             document.querySelector(`[data-message=${item.name}]`).textContent = orderInfoError[item.name];
-        } 
+        }
         // else {
         //     document.querySelector(`[data-message=${item.name}]`).textContent = "";
         // }
@@ -435,4 +472,126 @@ let constraints = {
             message: "必填！"
         }
     }
+}
+
+
+// SweetAlert 互動
+// 送出訂單 提示互動
+function orderInfoWarningAlert() {
+    Swal.fire({
+        title: '購物車沒有商品！',
+        icon: 'warning',
+        iconColor: '#C44021',
+        // showConfirmButton: false,
+    })
+}
+function orderInfoSuccessAlert() {
+    Swal.fire({
+        title: '成功送出訂單！',
+        icon: 'success',
+        showConfirmButton: false,
+        timer: 1000
+    })
+}
+
+// 加入購物車 提示互動
+function addCartsSuccessAlert() {
+    Swal.fire({
+        title: '成功加入購物車！',
+        icon: 'success',
+        showConfirmButton: false,
+        timer: 1000
+    })
+}
+function addCartsWarningAlert() {
+    Swal.fire({
+        title: '請填寫數量！',
+        icon: 'warning',
+        iconColor: '#C44021'
+        // showConfirmButton: false,
+    })
+}
+
+// 清除指定購物車 提示互動
+function deleteCartsItemCheckAlert(cartid) {
+    Swal.fire({
+        title: '確定要刪除此產品嗎？',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: '確定',
+        cancelButtonText: '取消'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // 執行 清除指定購物車產品
+            deleteCartsItem(cartid);
+
+            Swal.fire({
+                title: '成功刪除產品！',
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 1000
+            })
+        }
+    })
+}
+// 清除全部購物車 提示互動
+function deleteCartsAllCheckAlert() {
+    Swal.fire({
+        title: '確定要清空購物車嗎？',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: '確定',
+        cancelButtonText: '取消'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // 執行 清除購物車全部產品
+            deleteCartsAll();
+
+            Swal.fire({
+                title: '成功清空購物車！',
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 1000
+            })
+        }
+    })
+}
+function deleteCartsAllWarningAlert() {
+    Swal.fire({
+        title: '購物車沒有產品了！',
+        icon: 'warning',
+        iconColor: '#C44021',
+        showConfirmButton: false,
+        timer: 1000
+    })
+}
+
+// 編輯購物車數量 提示互動
+function editCartsNumSuccessAlert() {
+    Swal.fire({
+        title: '成功修改產品數量！',
+        icon: 'success',
+        showConfirmButton: false,
+        timer: 1000
+    })
+}
+function editCartsNumWarningAlert() {
+    Swal.fire({
+        title: '產品數量不可以小於 1！',
+        icon: 'warning',
+        iconColor: '#C44021',
+        showConfirmButton: false,
+        timer: 1000
+    })
+}
+
+// 關鍵字搜尋 提示互動
+function searchBtnWarningAlert(searchValue) {
+    Swal.fire({
+        title: `沒有與'${searchValue}'相關的產品！`,
+        icon: 'warning',
+        iconColor: '#C44021',
+        showConfirmButton: false,
+        timer: 1000
+    })
 }

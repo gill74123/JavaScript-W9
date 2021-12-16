@@ -35,12 +35,12 @@ function getOrderList() {
             renderOrderList(orderData);
 
             // 執行 圖表
-            if(orderData.length === 0){
+            if (orderData.length === 0) {
                 orderPageInfo.textContent = "目前沒有訂單！"
-            } else{
+            } else {
                 // 執行 渲染 C3 圖表
                 renderC3Chart();
-            }            
+            }
         })
         .catch((error) => {
             console.log(error);
@@ -109,7 +109,6 @@ function deleteOrderAll() {
             // 執行 取得訂單列表
             // 因為要一起渲染圖表
             getOrderList();
-            alert("訂單已全部清空搂~~~~~~~");
         })
         .catch((error) => {
             console.log(error);
@@ -121,9 +120,14 @@ function deleteOrderAll() {
 discardAllBtn.addEventListener("click", discardAllBtnClick);
 function discardAllBtnClick(e) {
     e.preventDefault();
+    console.log(orderData);
+    if (orderData.length === 0) {
+        deleteOrderAllWarningAlert();
+    } else {
+        // 執行 提示互動
+        deleteOrderAllCheckAlert();
+    }
 
-    // 執行 清除全部訂單
-    deleteOrderAll();
 }
 
 // 清除指定訂單
@@ -137,11 +141,10 @@ function deleteOrderItem(orderid) {
             // 執行 取得訂單列表
             // 因為要一起渲染圖表
             getOrderList();
-            alert("成功清除指定訂單啦！！！")
         })
         .catch((error) => {
             console.log(error);
-            alert(error.response.data.message);
+            // alert(error.response.data.message);
         })
 }
 
@@ -154,8 +157,8 @@ function deleteOrderItemClick() {
         item.addEventListener("click", (e) => {
             let orderid = e.target.dataset.orderid;
 
-            // 執行 清除指定訂單
-            deleteOrderItem(orderid);
+            // 執行 提示互動
+            deleteOrderItemCheckAlert(orderid)
         })
     })
 }
@@ -172,11 +175,12 @@ function editOrderStatus(editData) {
 
             // 執行 渲染訂單列表
             renderOrderList(orderData);
-            alert("成功修改訂單狀態優~~~~")
+            // 執行 提示互動
+            editOrderStatusSuccessAlert();
         })
         .catch((error) => {
             console.log(error);
-            alert(error.response.data.message);
+            // alert(error.response.data.message);
         })
 }
 
@@ -206,7 +210,7 @@ function editOrderStatusClick() {
 c3PieSelect.addEventListener("change", renderC3Chart);
 
 // 渲染 C3 圖表
-function renderC3Chart(){
+function renderC3Chart() {
     // console.log(c3PieSelect.value);
     if (c3PieSelect.value === "c3AllItemsFilter") {
         c3PieTitle.textContent = "全品項營收比重(篩選)";
@@ -332,7 +336,7 @@ function c3AllItemsCategory() {
         item.products.forEach((i) => {
             if (categoryObj[i.category]) {
                 categoryObj[i.category] += (i.quantity) * (i.price);
-            } else{
+            } else {
                 categoryObj[i.category] = (i.quantity) * (i.price)
             }
         })
@@ -340,7 +344,7 @@ function c3AllItemsCategory() {
     // console.log(categoryObj);
 
     // output [[title, total], [title, total]....]
-    let itemsCategory = Object.keys(categoryObj);    
+    let itemsCategory = Object.keys(categoryObj);
     let finalc3Data = []
     itemsCategory.forEach((item) => {
         let ary = [];
@@ -349,7 +353,7 @@ function c3AllItemsCategory() {
         finalc3Data.push(ary)
     })
     // console.log(finalc3Data);
-    
+
     // C3.js
     let chart = c3.generate({
         bindto: '#chart',
@@ -363,6 +367,70 @@ function c3AllItemsCategory() {
     });
 }
 
+// SweetAlert 互動
+// 清除指定訂單 提示互動
+function deleteOrderItemCheckAlert(orderid) {
+    Swal.fire({
+        title: '確定要刪除此訂單嗎？',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: '確定',
+        cancelButtonText: '取消'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // 執行 清除指定訂單
+            deleteOrderItem(orderid);
+
+            Swal.fire({
+                title: '成功刪除產品！',
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 1000
+            })
+        }
+    })
+}
+// 清除全部訂單 提示互動
+function deleteOrderAllCheckAlert() {
+    Swal.fire({
+        title: '確定要清空所有訂單嗎？',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: '確定',
+        cancelButtonText: '取消'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // 執行 清除全部訂單
+            deleteOrderAll();
+
+            Swal.fire({
+                title: '成功清空訂單列表！',
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 1000
+            })
+        }
+    })
+}
+function deleteOrderAllWarningAlert() {
+    Swal.fire({
+        title: '目前沒有任何訂單！',
+        icon: 'warning',
+        iconColor: '#C44021',
+        showConfirmButton: false,
+        timer: 1000
+    })
+}
+
+// 修改訂單狀態 提示互動
+function editOrderStatusSuccessAlert() {
+    Swal.fire({
+        title: '成功修改訂單狀態！',
+        icon: 'success',
+        showConfirmButton: false,
+        timer: 1000
+    })
+}
 
 
 

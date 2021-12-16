@@ -540,7 +540,7 @@ body {
   border-radius: 5px;
 }
 
-.searchBox{
+.searchInput{
   min-width: 255px;
   text-indent: 10px;
 }
@@ -609,7 +609,7 @@ body {
   }
 
   /* NEW START */
-  .searchBox{
+  .searchInput{
     margin-right: 0px;
     min-width: 70%;
   }
@@ -631,7 +631,7 @@ body {
     width: 100%;
   }
 
-  .searchBox{
+  .searchInput{
     margin-right: 0px;
     width: 82%;
   }
