@@ -26,4 +26,5 @@
 * [axios.js](https://github.com/axios/axios)
 * [validate.js](https://validatejs.org/)
 * [C3.js](https://c3js.org/gettingstarted.html)
+* [Sweetalert2](https://sweetalert2.github.io/)
 
