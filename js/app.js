@@ -224,7 +224,9 @@ function addCarts(productid, quantity) {
         })
         .catch((error) => {
             console.log(error);
-            alert(error.response.data.message)
+
+            // 執行 提示互動
+            addCartsWarningErrorAlert();
         })
 }
 
@@ -506,6 +508,14 @@ function addCartsSuccessAlert() {
 function addCartsWarningAlert() {
     Swal.fire({
         title: '請填寫數量！',
+        icon: 'warning',
+        iconColor: '#C44021'
+        // showConfirmButton: false,
+    })
+}
+function addCartsWarningErrorAlert() {
+    Swal.fire({
+        title: '產品數量不可以小於 1！',
         icon: 'warning',
         iconColor: '#C44021'
         // showConfirmButton: false,
